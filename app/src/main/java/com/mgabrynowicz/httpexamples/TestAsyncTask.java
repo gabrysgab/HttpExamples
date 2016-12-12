@@ -5,6 +5,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.io.IOException;
+
 /**
  * Created by RENT on 2016-12-12.
  */
@@ -14,6 +16,7 @@ public class TestAsyncTask extends AsyncTask<Integer, Integer, String> {
     private final TextView textView;
     private ImageView progressBar;
     private ProgressBar realProgressBar;
+    private ServerApiClient serverApiClient;
 
 
     public TestAsyncTask(TextView textView, ImageView progressBar, ProgressBar realProgressBar) {
@@ -21,6 +24,8 @@ public class TestAsyncTask extends AsyncTask<Integer, Integer, String> {
         this.textView = textView;
         this.progressBar = progressBar;
         this.realProgressBar = realProgressBar;
+        this.serverApiClient = new ServerApiClient();
+
 
     }
 
@@ -31,6 +36,11 @@ public class TestAsyncTask extends AsyncTask<Integer, Integer, String> {
 
     @Override
     protected void onPostExecute(String result) {
+
+        if(result == null) {
+            textView.setText("FAIL");
+            return;
+        }
         textView.setText("DONE " + result);
     }
 
@@ -45,21 +55,11 @@ public class TestAsyncTask extends AsyncTask<Integer, Integer, String> {
 
     @Override
     protected String doInBackground(Integer... integers) {
-
         try {
-            int timeout = integers[0];
-            Thread.sleep(timeout);
-            for (int i = 0; i < 100; i++) {
-
-                this.publishProgress(i);
-                Thread.sleep(timeout / 100);
-            }
-            return String.valueOf(timeout);
-        } catch (InterruptedException e) {
+            return serverApiClient.callServerApi();
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
     }
-
-
 }

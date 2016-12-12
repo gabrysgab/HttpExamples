@@ -1,10 +1,15 @@
 package com.mgabrynowicz.httpexamples;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,13 +22,24 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         textView = (TextView) findViewById(R.id.textView);
-        progressBar = (ImageView) findViewById(R.id.progressBar);
-        realProgressBar = (ProgressBar) findViewById(R.id.realProgressBar);
+
+        startService(new Intent(this, TestIntentService.class));
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        EventBus.getDefault().unregister(this);
+    }
 
 
-        TestAsyncTask asyncTask = new TestAsyncTask(textView, progressBar, realProgressBar);
-
-       asyncTask.execute(5000);
-
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(OperationCompletedEvent event) {
+        textView.setText(event.getResult());
     }
 }

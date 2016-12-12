@@ -17,21 +17,6 @@
         android:layout_height="wrap_content"
         android:text="Hello World!" />
 
-    <ImageView
-        android:id="@+id/progressBar"
-        android:layout_below="@id/textView"
-        android:layout_width="@dimen/progress_width"
-        android:layout_height="20dp"
-        android:background="@color/colorPrimary"
-        />
-
-    <ProgressBar
-        android:id="@+id/realProgressBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@android:style/Widget.Material.ProgressBar.Horizontal"
-        android:layout_below="@id/progressBar"
-        />
 
 
 </RelativeLayout>
